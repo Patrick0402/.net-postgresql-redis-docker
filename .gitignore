@@ -1,0 +1,35 @@
+# Ignorar bin e obj dentro da pasta WebApi
+/Products/bin/
+/Products/obj/
+
+
+# Ignorar configurações do VSCode
+.vscode/
+
+# Arquivos de usuário do Visual Studio
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Pastas e arquivos temporários do Visual Studio
+*.vs/
+
+# Pacotes NuGet
+/packages/
+
+# Secrets locais do ASP.NET Core
+/Products/secrets.json
+
+# Logs
+*.log
+logs/
+
+# Arquivos temporários do sistema operacional
+.DS_Store
+Thumbs.db
+ehthumbs.db
+*~
+
+# Publicações
+/Products/publish/

@@ -1,0 +1,42 @@
+services:
+  products.api:
+    build:
+      context: .
+      dockerfile: /Products/Dockerfile
+    ports:
+      - "5000:5075"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=products.database;Port=5432;Database=productdb;Username=postgres;Password=postgres
+      - Redis__ConnectionString=products.cache:6379
+
+    depends_on:
+      products.database:
+        condition: service_healthy
+      products.cache:
+        condition: service_started
+
+  products.database:
+    image: postgres:17
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: productdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  products.cache:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+volumes:
+  pgdata:
