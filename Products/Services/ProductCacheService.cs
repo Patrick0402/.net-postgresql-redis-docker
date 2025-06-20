@@ -6,16 +6,18 @@ namespace ProductsApi.Services
     public class ProductCacheService
     {
         private readonly IDatabase _cache;
+        private readonly TimeSpan _defaultCacheDuration;
 
-        public ProductCacheService(IConnectionMultiplexer redis)
+        public ProductCacheService(IConnectionMultiplexer redis, IConfiguration config)
         {
             _cache = redis.GetDatabase();
+            _defaultCacheDuration = TimeSpan.FromSeconds(config.GetValue("Redis:AbsoluteCacheTTLSeconds", 300));
         }
 
         public async Task CacheProductAsync(string key, object value)
         {
             var jsonData = JsonSerializer.Serialize(value);
-            await _cache.StringSetAsync(key, jsonData, TimeSpan.FromSeconds(5));
+            await _cache.StringSetAsync(key, jsonData, _defaultCacheDuration);
         }
 
         public async Task<T?> GetCachedProductAsync<T>(string key)
@@ -28,6 +30,7 @@ namespace ProductsApi.Services
         {
             await _cache.KeyDeleteAsync(key);
         }
-
     }
+
 }
+
