@@ -1,5 +1,5 @@
 services:
-  products.api:
+  products_api:
     build:
       context: .
       dockerfile: Products/Dockerfile
@@ -7,16 +7,16 @@ services:
       - "5000:5075"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Host=products.database;Port=5432;Database=productdb;Username=postgres;Password=postgres
-      - Redis__ConnectionString=products.cache:6379
+      - ConnectionStrings__DefaultConnection=Host=products_database;Port=5432;Database=productdb;Username=postgres;Password=postgres
+      - Redis__ConnectionString=products_cache:6379
 
     depends_on:
-      products.database:
+      products_database:
         condition: service_healthy
-      products.cache:
+      products_cache:
         condition: service_started
 
-  products.database:
+  products_database:
     image: postgres:17
     restart: always
     environment:
@@ -33,7 +33,7 @@ services:
       timeout: 3s
       retries: 5
 
-  products.cache:
+  products_cache:
     image: redis:7
     ports:
       - "6379:6379"
