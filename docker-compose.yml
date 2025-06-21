@@ -2,7 +2,7 @@ services:
   products.api:
     build:
       context: .
-      dockerfile: /Products/Dockerfile
+      dockerfile: Products/Dockerfile
     ports:
       - "5000:5075"
     environment:
